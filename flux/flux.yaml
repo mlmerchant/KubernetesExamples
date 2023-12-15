@@ -1,0 +1,34 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: example-gitrepo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/mlmerchant/KubernetesExamples
+  ref:
+    branch: main
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: example-kustomization
+  namespace: flux-system
+spec:
+  interval: 1m
+  path: "./flux/"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: example-gitrepo
+  validation: client
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flux-system
+
